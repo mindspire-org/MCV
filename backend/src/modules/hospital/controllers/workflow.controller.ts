@@ -4,8 +4,8 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
-import { HospitalWorkflowItem } from "../models/WorkflowItem";
-import { HospitalWorkflowTask } from "../models/WorkflowTask";
+import { HospitalWorkflowItem, HospitalWorkflowItemDoc } from "../models/WorkflowItem";
+import { HospitalWorkflowTask, HospitalWorkflowTaskDoc } from "../models/WorkflowTask";
 import { HospitalAuditLog } from "../models/AuditLog";
 
 // Validation schemas
@@ -218,7 +218,7 @@ export const updateWorkflowItem = async (req: Request, res: Response) => {
     })
       .populate("assignedTo", "username")
       .populate("submittedBy", "username")
-      .lean();
+      .lean() as HospitalWorkflowItemDoc | null;
 
     if (!item)
       return res.status(404).json({ error: "Workflow item not found" });
@@ -285,7 +285,7 @@ export const addComment = async (req: Request, res: Response) => {
         updatedBy: user,
       },
       { new: true },
-    ).lean();
+    ).lean() as HospitalWorkflowItemDoc | null;
 
     if (!item)
       return res.status(404).json({ error: "Workflow item not found" });
@@ -354,7 +354,7 @@ export const updateTask = async (req: Request, res: Response) => {
     )
       .populate("assignedTo", "username")
       .populate("assignedBy", "username")
-      .lean();
+      .lean() as HospitalWorkflowTaskDoc | null;
 
     if (!task) return res.status(404).json({ error: "Task not found" });
 
